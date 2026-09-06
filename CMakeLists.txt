@@ -4,9 +4,9 @@ set(CMAKE_CXX_STANDARD 23)
 project(MemoryPool VERSION 1.0)
 
 add_executable(MemoryPool
-    main.cpp
-    memPool.cpp
-    lockFreeQueue.cpp
+    src/main.cpp
+    src/structures/memPool.cpp
+    src/structures/lockFreeQueue.cpp
 )
 
 target_compile_options(MemoryPool PRIVATE

@@ -10,16 +10,14 @@ class LockFreeQueue
 
     ~LockFreeQueue() {
 
-        curr = head_;
+        Node * curr = head_;
 
         while (curr) {
             Node* tmp = curr->next_;
             std::destroy_at(curr);
-            nodePool_->deallocate(reinterpret_cast<std::byte*>(curr));
+            nodePool_.deallocate(reinterpret_cast<std::byte*>(curr));
             curr = tmp;
         }
-
-        delete nodePool_;
     }
 
     struct Node
@@ -31,13 +29,13 @@ class LockFreeQueue
 
     Node* getNode() 
     {   
-        std::byte* block = nodePool_->allocate();
+        std::byte* block = nodePool_.allocate();
         return std::construct_at(reinterpret_cast<Node*>(block));
     }
 
     void push_back(T* data)
     {   
-        std::byte* block = nodePool_->allocate();
+        std::byte* block = nodePool_.allocate();
         Node* node = reinterpret_cast<Node*>(block);
         std::construct_at(node);
         node->data = data;
@@ -56,10 +54,19 @@ class LockFreeQueue
     }
 
     void pop_front() {
+        if (!head_) return;
+
         Node* tmp = head_;
-        head_ = head->next;
+        head_ = head_->next_;
+        
+        if (head_) {
+            head_->prev_ = nullptr;
+        } else {
+            tail_ = nullptr;
+        }
+
         std::destroy_at(tmp);
-        nodePool_->deallocate(reinterpret_cast<std::byte*>(curr));
+        nodePool_.deallocate(reinterpret_cast<std::byte*>(tmp));
     }
 
     void erase(T* data)
@@ -76,7 +83,7 @@ class LockFreeQueue
                 curr->prev_->next_ = curr->next_;
                 curr->next_->prev_ = curr->prev_;
                 std::destroy_at(curr);
-                nodePool_->deallocate(reinterpret_cast<std::byte*>(curr));
+                nodePool_.deallocate(reinterpret_cast<std::byte*>(curr));
                 return;
             }
             curr = curr->next_;

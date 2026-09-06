@@ -2,8 +2,8 @@
 #include <memory>
 #include <chrono>
 
-#include "memPool.h"
-#include "lockFreeQueue.cpp"
+#include "structures/memPool.h"
+#include "structures/lockFreeQueue.cpp"
 
 class Foo {
 	public:

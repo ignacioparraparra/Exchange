@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -fsanitize=address,undefined CMakeFiles/MemoryPool.dir/src/main.cpp.o CMakeFiles/MemoryPool.dir/src/structures/memPool.cpp.o CMakeFiles/MemoryPool.dir/src/structures/lockFreeQueue.cpp.o -o MemoryPool 
