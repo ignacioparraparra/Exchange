@@ -1,3 +1,0 @@
-/home/kira/Desktop/exchange/build/CMakeFiles/MemoryPool.dir
-/home/kira/Desktop/exchange/build/CMakeFiles/edit_cache.dir
-/home/kira/Desktop/exchange/build/CMakeFiles/rebuild_cache.dir
