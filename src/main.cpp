@@ -44,23 +44,70 @@ void mockEngineNew(std::size_t size) {
 	}
 }
 
+struct Node {
+	Node(int data_) : data(data_) {};
+
+	Node* next = nullptr;
+	Node* prev = nullptr;
+	
+	int data;
+};
+
+#include <unordered_map> 
+
 int main() {
 
-	LockFreeQueue<int> q(100);
-	int x = 5;
-	int* p = &x;
-	int y = 10;
-	int* py = &y;
-	int j = 11;
-	int* pj = &j;
+	Node* a = new Node(1);
+	Node* b = new Node(2);
+	Node* c = new Node(3);
 
-	q.push_back(p);
-	q.push_back(py);
-	q.push_back(pj);
+	a->next = b;
+	b->prev = a;
+	b->next = c;
+	c->prev = b;
 
-	int* z = q.front();
-	int* k = q.back();
-	std::cout<<"z: "<<*z<<" k: "<<*k<<std::endl; 
+	// a <-> b <-> c
+	using orderID = int;
+	using orderAddress = Node*;
+
+	std::unordered_map<orderID, orderAddress> orderMapper;
+
+	orderMapper[a->data] = a;
+	orderMapper[b->data] = b;
+	orderMapper[c->data] = c;
+
+	Node* ac = orderMapper[2];
+
+	Node * t = ac->prev;
+	ac->next->prev = ac->prev;
+	t->next = ac->next;
+
+	std::cout<<orderMapper.size()<<std::endl;
+	orderMapper.erase(2);
+	std::cout<<orderMapper.size()<<std::endl;
+	delete ac;
+
+	std::cout<<a->next->data<<std::endl;
+	std::cout<<c->prev->data;
+
+	delete a;
+	delete c;
+
+	// LockFreeQueue<int> q(100);
+	// int x = 5;
+	// int* p = &x;
+	// int y = 10;
+	// int* py = &y;
+	// int j = 11;
+	// int* pj = &j;
+
+	// q.push_back(p);
+	// q.push_back(py);
+	// q.push_back(pj);
+
+	// int* z = q.front();
+	// int* k = q.back();
+	// std::cout<<"z: "<<*z<<" k: "<<*k<<std::endl; 
 
 	// MemoryPool pool(sizeof(Foo), 10000, alignof(Foo));
 
